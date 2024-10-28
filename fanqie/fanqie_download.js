@@ -156,7 +156,7 @@
                 // 发送请求获取页面内容
                 const response = await fetch(info.link, {
                     headers: {
-                        'Cookie': 'novel_web_id=6338474163312381345',
+                        'Cookie': `novel_web_id=${document.cookie.split(';').find(c => c.trim().startsWith('novel_web_id=')).split('=')[1]}`,
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0'
                     }
                 });

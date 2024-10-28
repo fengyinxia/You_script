@@ -5,7 +5,6 @@
 // @description  修改novel_web_id的值以实现
 // @author       junzia
 // @match        https://fanqienovel.com/*
-// @grant        GM_cookie
 // @run-at       document-start
 // ==/UserScript==
 
@@ -14,21 +13,21 @@
 
     const targetId = '0141661321110715542';
 
-    const updateCookie = async () => {
-        const cookies = await new Promise(r => GM_cookie.list({}, r));
-        const found = cookies.find(c => c.name === 'novel_web_id');
-        if(found?.value !== targetId) {
-            await new Promise(r => GM_cookie.delete({name: 'novel_web_id'}, r));
-            GM_cookie.set({
-                name: 'novel_web_id',
-                value: targetId,
-                path: '/',
-                secure: true
-            });
+    const updateCookie = () => {
+        const cookies = document.cookie.split(';');
+        console.log('当前所有cookie:', cookies);
+        
+        const found = cookies.find(c => c.trim().startsWith('novel_web_id='));
+        const currentValue = found ? found.split('=')[1] : null;
+        console.log('找到的novel_web_id:', currentValue);
+        
+        if(currentValue !== targetId) {
+            document.cookie = `novel_web_id=${targetId};path=/;secure=true`;
+            console.log('已更新cookie为:', targetId);
         }
     };
+
     updateCookie();
     setInterval(updateCookie, 3000);
-
 
 })();
