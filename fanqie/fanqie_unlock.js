@@ -1,33 +1,22 @@
 // ==UserScript==
-// @name         番茄小说免VIP解锁
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  修改novel_web_id的值以实现
-// @author       junzia
+// @name         解锁番茄小说
 // @match        https://fanqienovel.com/*
 // @run-at       document-start
+// @grant        none
 // ==/UserScript==
 
-(() => {
+(function() {
     'use strict';
-
-    const targetId = '0141661321110715542';
-
-    const updateCookie = () => {
-        const cookies = document.cookie.split(';');
-        console.log('当前所有cookie:', cookies);
-        
-        const found = cookies.find(c => c.trim().startsWith('novel_web_id='));
-        const currentValue = found ? found.split('=')[1] : null;
-        console.log('找到的novel_web_id:', currentValue);
-        
-        if(currentValue !== targetId) {
-            document.cookie = `novel_web_id=${targetId};path=/;secure=true`;
-            console.log('已更新cookie为:', targetId);
+    const originalGetItem = localStorage.getItem;
+    localStorage.getItem = function(key) {
+        if (key.startsWith('__tea_cache_tokens_')) {
+            const fakeCache = {
+                web_id: "0141661321110715542",
+                user_unique_id: "verify_m2rm439h_E7cCpt2V_Ugxm_4xzP_88Pq_MfG5v2FmNs9h",
+                timestamp: Date.now()
+            };
+            return JSON.stringify(fakeCache);
         }
+        return originalGetItem.apply(this, arguments);
     };
-
-    updateCookie();
-    setInterval(updateCookie, 3000);
-
 })();
